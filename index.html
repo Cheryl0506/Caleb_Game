@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -17,16 +17,42 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
-    <title>Watermelon</title>
+    <title>合成夏以昼</title>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+  
+      #game {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+  
+      #canvas {
+        flex-grow: 1;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+  
+      #floor {
+        height: 50px;
+        background-color: brown;
+      }
+    </style>
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="watermelon" />
-    <meta property="og:title" content="watermelon" />
-    <meta property="og:description" content="Play Watermelon Game!" />
-    <meta property="og:image" content="assets/img/10.png" />
+    <meta property="og:site_name" content="合成夏以昼" />
+    <meta property="og:title" content="合成夏以昼" />
+    <meta property="og:description" content="谁是你最爱的哥哥^ ^" />
+    <meta property="og:image" content="assets/img/LOGO.png" />
     <meta property="og:image:type" content="image/png" />
 
-    <link rel="icon shortcut" href="assets/img/10.png" type="image/x-icon" />
+    <link rel="icon shortcut" href="assets/img/LOGO.png" type="image/x-icon" />
   </head>
 
   <body>
@@ -36,7 +62,7 @@
       <div class="item" id="game">
         <div id="overlay">
           <button id="playAgainButton" onclick="location.reload()">
-            Play Again
+            再玩一次
           </button>
         </div>
         <canvas id="canvas"></canvas>
@@ -46,13 +72,7 @@
       <div class="empty"></div>
       <div class="empty"></div>
 
-      <div class="item" id="footer">
-        <div id="links">
-          <a href="https://shinyou.ng">shinyoung</a>
-          <a href="https://github.com/choshinyoung/watermelon">Github</a>
-        </div>
-
-        <p>Made with ❤️ by choshinyoung</p>
+     
       </div>
     </div>
 

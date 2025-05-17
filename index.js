@@ -6,7 +6,7 @@
     Bodies = Matter.Bodies,
     Events = Matter.Events,
     Composite = Matter.Composite;
-
+  const MAX_FRUIT_SIZE = 9;
   const parent = document.getElementById("game");
   const canvas = document.getElementById("canvas");
   var gameOverlayer = document.getElementById("overlay");
@@ -41,7 +41,13 @@
 
   const background = Bodies.rectangle(240, 360, 480, 720, {
     isStatic: true,
-    render: { fillStyle: "#fe9" },
+    render: { 
+      sprite: {
+        texture: 'assets/img/background.png',
+        xScale: (480 / 1086) ,
+        yScale: (720 / 1629)
+      }
+     },
   });
   background.collisionFilter = {
     group: 0,
@@ -108,6 +114,7 @@
       ball = null;
 
       newSize = Math.ceil(Math.random() * 3);
+      newSize = Math.min(Math.ceil(Math.random() * 3), MAX_FRUIT_SIZE);
 
       setTimeout(() => createNewBall(newSize), 500);
     }
@@ -209,31 +216,31 @@
 
       if (bodies[0].size === undefined || bodies[1].size === undefined) return;
 
-      if (bodies[0].size === bodies[1].size) {
-        allBodies = Composite.allBodies(engine.world);
+      if (bodies[0].size === bodies[1].size && bodies[0].size < 9) {
+        const allBodies = Composite.allBodies(engine.world);
         if (allBodies.includes(bodies[0]) && allBodies.includes(bodies[1])) {
-          if (
-            (Date.now() - bodies[0].createdAt < 100 ||
+          if ((Date.now() - bodies[0].createdAt < 100 ||
               Date.now() - bodies[1].createdAt < 100) &&
             bodies[0].createdAt != 0 &&
-            bodies[1].createdAt != 0
-          ) {
+            bodies[1].createdAt != 0)
+           {
             return;
           }
 
           World.remove(engine.world, bodies[0]);
           World.remove(engine.world, bodies[1]);
-
+          
+          const newSize = bodies[0].size + 1;
           World.add(
             engine.world,
             newBall(
               (bodies[0].position.x + bodies[1].position.x) / 2,
               (bodies[0].position.y + bodies[1].position.y) / 2,
-              bodies[0].size === 11 ? 11 : bodies[0].size + 1
+              newSize
             )
           );
 
-          score += bodies[0].size;
+          score += Math.pow(2, bodies[0].size);  // 指数级加分
 
           var audio = new Audio("assets/pop.wav");
           audio.play();
@@ -248,10 +255,10 @@
       ctx.rect(0, 0, 480, 720);
       ctx.fill();
 
-      writeText("Game Over", "center", 240, 280, 50);
-      writeText("Score: " + score, "center", 240, 320, 30);
+      writeText("游戏结束", "center", 240, 280, 50);
+      writeText("分数: " + score, "center", 240, 320, 30);
     } else {
-      writeText(score, "start", 25, 60, 40);
+      writeText(score, "开始", 25, 60, 40);
 
       if (isLineEnable) {
         ctx.strokeStyle = "#f55";
@@ -360,8 +367,8 @@
     });
     c.size = size;
     c.createdAt = Date.now();
-    c.restitution = 0.3;
-    c.friction = 0.1;
+    c.restitution = 0.5;
+    c.friction = 0.05;
 
     return c;
   }
