@@ -356,12 +356,14 @@
   }
 
   function newBall(x, y, size) {
-    c = Bodies.circle(x, y, size * 10, {
+    const radius = size * 14;
+    const textureSize = 256;
+    const c = Bodies.circle(x, y, radius, {
       render: {
         sprite: {
           texture: `assets/img/${size}.png`,
-          xScale: size / 12.75,
-          yScale: size / 12.75,
+          xScale: (radius * 2) / textureSize,
+          yScale: (radius * 2) / textureSize,
         },
       },
     });
