@@ -13,7 +13,10 @@
   const floor = document.getElementById("floor");
 
   const ctx = canvas.getContext("2d");
-
+  //添加参数（resize）
+  let safetyLineY = 100;
+  let eventScale = 1;
+  
   const engine = Engine.create();
 
   const render = Render.create({
@@ -124,13 +127,17 @@
     if (isGameOver) return;
 
     const rect = canvas.getBoundingClientRect();
-    mousePos = e.clientX / parent.style.zoom - rect.left;
+    // mousePos = e.clientX / parent.style.zoom - rect.left;
+    mousePos = (e.clientX - rect.left) / eventScale
+    
   });
   addEventListener("touchmove", (e) => {
     if (isGameOver) return;
 
     const rect = canvas.getBoundingClientRect();
-    mousePos = e.touches[0].clientX / parent.style.zoom - rect.left;
+    // mousePos = e.touches[0].clientX / parent.style.zoom - rect.left;
+    mousePos = (e.clientX - rect.left) / eventScale
+
   });
 
   addEventListener("click", () => {
@@ -282,26 +289,51 @@
     ctx.fillText(text, x, y);
   }
 
+  // function resize() {
+  //   canvas.height = 720;
+  //   canvas.width = 480;
+
+  //   if (isMobile()) {
+  //     parent.style.zoom = window.innerWidth / 480;
+  //     parent.style.top = "0px";
+
+  //     floor.style.height = `${
+  //       (window.innerHeight - canvas.height * parent.style.zoom) /
+  //       parent.style.zoom
+  //     }px`;
+  //   } else {
+  //     parent.style.zoom = window.innerHeight / 720 / 1.3;
+  //     parent.style.top = `${(canvas.height * parent.style.zoom) / 15}px`;
+
+  //     floor.style.height = "50px";
+  //   }
+
+  //   Render.setPixelRatio(render, parent.style.zoom * 2);
+  // }
+  
+  //改了resize，功能：1.自适应 2.居中
   function resize() {
-    canvas.height = 720;
-    canvas.width = 480;
-
-    if (isMobile()) {
-      parent.style.zoom = window.innerWidth / 480;
-      parent.style.top = "0px";
-
-      floor.style.height = `${
-        (window.innerHeight - canvas.height * parent.style.zoom) /
-        parent.style.zoom
-      }px`;
-    } else {
-      parent.style.zoom = window.innerHeight / 720 / 1.3;
-      parent.style.top = `${(canvas.height * parent.style.zoom) / 15}px`;
-
-      floor.style.height = "50px";
-    }
-
-    Render.setPixelRatio(render, parent.style.zoom * 2);
+    const parentWidth = parent.offsetWidth;
+    const parentHeight = parent.offsetHeight;
+    
+    canvas.width = parentWidth;
+    canvas.height = parentHeight;
+    
+    const scale = Math.min(parentWidth / 480, parentHeight / 720);
+    canvas.style.transform = `scale(${scale})`;
+    canvas.style.transformOrigin = 'top left';
+    
+    const scaledWidth = 480 * scale;
+    const scaledHeight = 720 * scale;
+    canvas.style.marginLeft = `${(parentWidth - scaledWidth) / 2}px`;
+    canvas.style.marginTop = `${(parentHeight - scaledHeight) / 2}px`;
+    
+    render.options.width = parentWidth;
+    render.options.height = parentHeight;
+    
+    safetyLineY = parentHeight * (100 / 720);
+    
+    eventScale = scale;
   }
 
   function refreshLoop() {
