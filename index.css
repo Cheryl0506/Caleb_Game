@@ -6,7 +6,7 @@ body {
   height: 100%;
   margin: 0;
 
-  background: #f9d57be1;
+  background: #feb702e1;
 
   color: white;
 
@@ -61,7 +61,7 @@ button * {
 
 #floor {
   width: 480px;
-  background: #b37b50;
+  background: #fdfcf9;
 
   border-radius: 0 0 25px 25px;
 }
@@ -90,7 +90,7 @@ button * {
 button {
   border-radius: 10px;
   color: #fafafa;
-  background: #e8ca89;
+  background: #fdc03d;
   outline: none;
   cursor: pointer;
   border: none;
