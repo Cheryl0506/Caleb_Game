@@ -6,6 +6,7 @@
     Bodies = Matter.Bodies,
     Events = Matter.Events,
     Composite = Matter.Composite;
+    Runner = Matter.Runner;
   const MAX_FRUIT_SIZE = 9;
   const parent = document.getElementById("game");
   const canvas = document.getElementById("canvas");
@@ -68,7 +69,7 @@
   });
   World.add(engine.world, [wallLeft, wallRight, ground, background]);
 
-  Engine.run(engine);
+  Runner.run(engine);
   Render.run(render);
 
   resize();
@@ -166,18 +167,19 @@
     if (ball != null) {
       const gravity = engine.world.gravity;
       Body.applyForce(ball, ball.position, {
-        x: -gravity.x * gravity.scale * ball.mass,
+        x: 0,
         y: -gravity.y * gravity.scale * ball.mass,
       });
 
       if (isClicking && mousePos !== undefined) {
-        ball.position.x = mousePos;
+        Body.setVelocity(ball, { x: 0, y: 0 });
+        Body.setPosition(ball, {
+          x: Math.max(25, Math.min(455, mousePos)),
+          y: 50
+        });
 
-        if (mousePos > 455) ball.position.x = 455;
-        else if (mousePos < 25) ball.position.x = 25;
       }
 
-      ball.position.y = 50;
     }
 
     isLineEnable = false;
@@ -219,17 +221,13 @@
       if (bodies[0].size === bodies[1].size && bodies[0].size < 9) {
         const allBodies = Composite.allBodies(engine.world);
         if (allBodies.includes(bodies[0]) && allBodies.includes(bodies[1])) {
-          if ((Date.now() - bodies[0].createdAt < 100 ||
-              Date.now() - bodies[1].createdAt < 100) &&
+          if ((Date.now() - bodies[0].createdAt < 20 &&
+              Date.now() - bodies[1].createdAt < 20) &&
             bodies[0].createdAt != 0 &&
             bodies[1].createdAt != 0)
            {
             return;
           }
-
-          World.remove(engine.world, bodies[0]);
-          World.remove(engine.world, bodies[1]);
-          
           const newSize = bodies[0].size + 1;
           World.add(
             engine.world,
@@ -239,6 +237,10 @@
               newSize
             )
           );
+          World.remove(engine.world, bodies[0]);
+          World.remove(engine.world, bodies[1]);
+          
+
 
           score += Math.pow(2, bodies[0].size);  // 指数级加分
 
@@ -247,6 +249,7 @@
         }
       }
     });
+    
   }
 
   Events.on(render, "afterRender", () => {
@@ -268,6 +271,9 @@
         ctx.stroke();
       }
     }
+    
+
+
   });
 
   function writeText(text, textAlign, x, y, size) {
@@ -358,12 +364,14 @@
   function newBall(x, y, size) {
     const radius = size * 14;
     const textureSize = 256;
+    const scaleFactor = 1.75;
     const c = Bodies.circle(x, y, radius, {
+      density: 0.0005,
       render: {
         sprite: {
           texture: `assets/img/${size}.png`,
-          xScale: (radius * 2) / textureSize,
-          yScale: (radius * 2) / textureSize,
+          xScale: (radius * 2 - scaleFactor) / textureSize,
+          yScale: (radius * 2 - scaleFactor) / textureSize
         },
       },
     });

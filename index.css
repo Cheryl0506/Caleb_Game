@@ -6,7 +6,7 @@ body {
   height: 100%;
   margin: 0;
 
-  background: #141414;
+  background: #f9d57be1;
 
   color: white;
 
@@ -90,7 +90,7 @@ button * {
 button {
   border-radius: 10px;
   color: #fafafa;
-  background: #39af3d;
+  background: #e8ca89;
   outline: none;
   cursor: pointer;
   border: none;
